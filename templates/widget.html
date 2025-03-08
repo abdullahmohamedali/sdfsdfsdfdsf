@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212; /* Dark mode */
+            color: #ffffff; /* Light text */
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        h2 {
+            color: #58CC02;
+        }
+        .stats {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .username {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00c853; /* Duolingo green */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Duolingo Stats</h2>
+    <div class="stats">
+        <div class="username">
+            <img src="https://d35aaqx5ub95lt.cloudfront.net/favicon.ico" class="icon" alt="Duolingo">
+            {{ data.username }}
+        </div>
+        <strong>🔥 Streak:</strong> {{ data.streak }}<br>
+        <strong>⭐ XP:</strong> {{ data.xp }}
+    </div>
+</body>
+</html>
