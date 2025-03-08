@@ -1,1 +1,1 @@
-web: python server.py  # Change 'app.py' to your main script file
+web: python main.py  # Change 'app.py' to your main script file
