@@ -1,14 +1,3 @@
-from flask import Flask, jsonify, render_template
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-import time
-
-app = Flask(__name__)
-
 def get_duolingo_stats(username):
     url = f"https://www.duolingo.com/profile/{username}"
 
@@ -16,7 +5,6 @@ def get_duolingo_stats(username):
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.binary_location = "/usr/bin/google-chrome"
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
@@ -62,15 +50,3 @@ def get_duolingo_stats(username):
 
     finally:
         driver.quit()
-
-@app.route("/duolingo/<username>")
-def duolingo(username):
-    return jsonify(get_duolingo_stats(username))
-
-@app.route("/widget/<username>")
-def widget(username):
-    data = get_duolingo_stats(username)
-    return render_template("widget.html", data=data)
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
