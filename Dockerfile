@@ -1,14 +1,14 @@
-FROM mcr.microsoft.com/playwright/python:v1.40.0-focal  # Full Python + Chrome
+# Use a full Python version (not slim)
+FROM python:3.9
 
 WORKDIR /app
-
 COPY . .
 
-RUN pip install -r requirements.txt  # Install your dependencies
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Set up Chrome & Chromedriver
+ENV CHROME_BIN=/usr/bin/google-chrome
+ENV CHROMEDRIVER_BIN=/usr/bin/chromedriver
 
-# Expose the Flask port
-EXPOSE 5000
-
-# Start the app using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
