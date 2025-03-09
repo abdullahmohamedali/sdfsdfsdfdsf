@@ -1,3 +1,4 @@
-Flask==3.0.2
-selenium==4.16.0
-gunicorn==21.2.0
+Flask
+selenium
+gunicorn
+webdriver-manager
