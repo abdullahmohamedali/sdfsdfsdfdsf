@@ -9,9 +9,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Download and extract Chromium manually (NO APT REQUIRED)
-RUN curl -L https://github.com/puppeteer/puppeteer/releases/download/v21.0.0/chromium-linux64.zip -o chromium.zip && \
+RUN python -c "import urllib.request; urllib.request.urlretrieve('https://github.com/puppeteer/puppeteer/releases/download/v21.0.0/chromium-linux64.zip', 'chromium.zip')" && \
     unzip chromium.zip && \
     rm chromium.zip
+
 
 # Set Chromium environment variables
 ENV CHROMIUM_PATH="/app/chrome-linux64/chrome"
