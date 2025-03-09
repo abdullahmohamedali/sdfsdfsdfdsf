@@ -1,15 +1,11 @@
-# Use an image that already includes Chrome & Chromedriver
-FROM selenium/standalone-chrome:latest
+FROM mcr.microsoft.com/playwright/python:v1.40.0-focal  # Full Python + Chrome
 
-# Set the working directory
 WORKDIR /app
 
-# Copy and install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application files
 COPY . .
+
+RUN pip install -r requirements.txt  # Install your dependencies
+
 
 # Expose the Flask port
 EXPOSE 5000
