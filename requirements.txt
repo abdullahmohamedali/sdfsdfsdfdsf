@@ -1,4 +1,1 @@
-flask
-selenium
-webdriver-manager
-gunicorn
+p7zip-full
