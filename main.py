@@ -1,61 +1,33 @@
-from flask import Flask, jsonify, render_template
+import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from flask import Flask
 
 app = Flask(__name__)
 
-def get_duolingo_stats(username):
-    url = f"https://www.duolingo.com/profile/{username}"
+def get_driver():
+    # Install Chrome and ChromeDriver automatically
+    chromedriver_autoinstaller.install()
 
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
+    # Set Chrome options
+    options = Options()
+    options.add_argument("--headless")  # Run in headless mode
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    # Use built-in Chrome & Chromedriver (inside container)
-    service = Service("/usr/bin/chromedriver")
+    # Start WebDriver
+    service = Service()
     driver = webdriver.Chrome(service=service, options=options)
+    return driver
 
-    try:
-        driver.get(url)
-
-        # Wait for Streak element
-        try:
-            streak_element = WebDriverWait(driver, 15).until(
-                EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div/div[3]/div/div[2]/div/div[4]/div[2]/div/div[1]/div/div/h4"))
-            )
-            streak = streak_element.text
-        except:
-            streak = "Not Found"
-
-        # Wait for XP element
-        try:
-            xp_element = WebDriverWait(driver, 15).until(
-                EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div/div[3]/div/div[2]/div/div[4]/div[2]/div/div[2]/div/div/h4"))
-            )
-            xp = xp_element.text
-        except:
-            xp = "Not Found"
-
-        return {"username": username, "streak": streak, "xp": xp}
-
-    except Exception as e:
-        return {"error": str(e)}
-
-    finally:
-        driver.quit()
-
-@app.route("/duolingo/<username>")
-def duolingo(username):
-    return jsonify(get_duolingo_stats(username))
-
-@app.route("/widget/<username>")
-def widget(username):
-    data = get_duolingo_stats(username)
-    return render_template("widget.html", data=data)
+@app.route("/")
+def index():
+    driver = get_driver()
+    driver.get("https://www.google.com")
+    page_title = driver.title
+    driver.quit()
+    return f"Google Page Title: {page_title}"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000)
