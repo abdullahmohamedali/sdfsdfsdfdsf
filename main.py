@@ -5,21 +5,23 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-import chromedriver_autoinstaller
+import os
 
 app = Flask(__name__)
 
-# Auto-install Chromedriver
-chromedriver_autoinstaller.install()
-
-# Configure Chrome options
+# Configure Selenium Chrome WebDriver
 def get_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  
+    options.add_argument("--headless")  # Run Chrome in headless mode
     options.add_argument("--no-sandbox")  
     options.add_argument("--disable-dev-shm-usage")  
 
-    service = Service()  # Auto-detect chromedriver path
+    # Use Chromium binary installed via apk
+    options.binary_location = "/usr/bin/chromium-browser"
+
+    # Set Chromedriver path
+    service = Service("/usr/bin/chromedriver")
+    
     return webdriver.Chrome(service=service, options=options)
 
 # Scrape Duolingo stats
@@ -31,7 +33,7 @@ def get_duolingo_stats(username):
         driver.get(url)
         time.sleep(5)
 
-        # Scroll down
+        # Scroll down to ensure content loads
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(3)
 
@@ -72,3 +74,4 @@ def widget(username):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
+
