@@ -1,29 +1,28 @@
-# Use a lightweight Python base image
+# Use an official lightweight Python image
 FROM python:3.12-slim
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Install Python dependencies
+# Install required Python packages
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Download and extract Chromium manually (NO APT REQUIRED)
-RUN python -c "import urllib.request; urllib.request.urlretrieve('https://github.com/puppeteer/puppeteer/releases/download/v21.0.0/chromium-linux64.zip', 'chromium.zip')" && \
-    unzip chromium.zip && \
-    rm chromium.zip
+# Download and install Chromium manually
+RUN wget -q https://storage.googleapis.com/chrome-for-testing-public/114.0.5735.90/linux64/chrome-linux64.zip && \
+    unzip chrome-linux64.zip && rm chrome-linux64.zip
 
-
-# Set Chromium environment variables
-ENV CHROMIUM_PATH="/app/chrome-linux64/chrome"
-ENV CHROMEDRIVER_PATH="/app/chrome-linux64/chromedriver"
-ENV PATH="/app/chrome-linux64/:$PATH"
+# Download and install Chromedriver
+RUN wget -q https://storage.googleapis.com/chrome-for-testing-public/114.0.5735.90/linux64/chromedriver-linux64.zip && \
+    unzip chromedriver-linux64.zip && rm chromedriver-linux64.zip && \
+    mv chromedriver-linux64/chromedriver /usr/bin/chromedriver && \
+    chmod +x /usr/bin/chromedriver
 
 # Copy application files
 COPY . .
 
-# Expose port 5000
+# Expose the Flask port
 EXPOSE 5000
 
-# Run Flask app with Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "main:app"]
+# Start the app using Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
