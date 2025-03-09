@@ -4,14 +4,14 @@ FROM python:3.12-slim
 # Set the working directory
 WORKDIR /app
 
-# Install required dependencies
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application
+# Copy application files
 COPY . .
 
-# Expose Flask port (5000)
+# Expose Flask port
 EXPOSE 5000
 
 # Start the app with Gunicorn
