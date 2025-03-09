@@ -14,7 +14,18 @@ def get_driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Run Chrome in headless mode
     options.add_argument("--no-sandbox")  
-    options.add_argument("--disable-dev-shm-usage")  
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--single-process")
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-background-networking")
+    options.add_argument("--disable-background-timer-throttling")
+    options.add_argument("--disable-backgrounding-occluded-windows")
+    options.add_argument("--disable-client-side-phishing-detection")
+    options.add_argument("--disable-popup-blocking")
+    options.add_argument("--disable-default-apps")
+
 
     # Use Chromium binary installed via apk
     options.binary_location = "/usr/bin/chromium-browser"
